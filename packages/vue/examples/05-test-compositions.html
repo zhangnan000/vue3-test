@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li v-for="(item, index) in list" :key='item.id' @click="clickItem(item)">{{item.con}}</li>
+    </ul>
+    <p>{{randomNum}}</p>
+    <p>{{double}}</p>
+  </div>
+</body>
+  <script src="../dist/vue.global.js"></script>
+  <script>
+    const { createApp, reactive, onMounted, computed, ref, toRefs } = Vue
+
+    const app = createApp({
+      setup() {
+        // 数据响应式：使对象相应化
+        const state = reactive({
+          list: [
+            {con:'小白', id: 1},
+            {con:'小黑', id: 2},
+            {con:'小黄', id: 3}
+          ],
+          count: 1,
+          double: computed(() => state.count * 2)
+        })
+        function clickItem(item) {
+          console.log(item.con)
+        }
+
+        onMounted(() => {
+          state.list.push({con: '小红', id: 4})
+        })
+
+        const randomNum = ref(0)
+        setInterval(() => {
+          randomNum.value = Math.random()*1000
+        }, 1000)
+        return {...toRefs(state), clickItem, randomNum}
+      }
+    })
+
+    app.mount('#app')
+  </script>
+</html>

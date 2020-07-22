@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <h1 @click="onclick">{{message}}</h1>
+    <p>{{computedMsg}}</p>
+    <p>counter: {{counter}}</p>
+  </div>
+</body>
+  <script src="../dist/vue.global.js"></script>
+  <script>
+    const { createApp, reactive, onMounted, computed, ref, toRefs } = Vue
+
+    const app = createApp({
+      setup() {
+        // 数据响应式：使对象相应化
+        const state = reactive({
+          message: 'hello, vue3',
+          computedMsg: computed(() => `${state.message}!!!!!!!`)
+        })
+        // 回调函数
+        function onclick() {
+          state.message = 'vue3, hello'
+        }
+
+        // 生命周期钩子函数
+        onMounted(()=> {
+          console.log('mounted')
+        })
+
+        // 单值响应式，ref可以使单值作一层包装，得到一个Ref对象，它是响应式的
+        let counter = ref(0)
+        setInterval(() => {
+          counter.value++
+        }, 1000)
+
+        return {...toRefs(state), onclick, counter}
+      }
+    })
+
+    app.mount('#app')
+  </script>
+</html>
